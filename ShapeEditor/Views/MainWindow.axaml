@@ -1,0 +1,129 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ShapeEditor.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:ShapeEditor.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="ShapeEditor.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="ShapeEditor"
+        WindowStartupLocation="CenterScreen"
+        Width="900" Height="650">
+    <Window.Resources>
+        <converters:CenterConverter x:Key="CenterConverter"/>
+    </Window.Resources>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="300, *">
+
+        <Border Grid.Column="0"
+                Background="#2D2D2D"
+                Padding="15">
+            <StackPanel Spacing="15">
+                <TextBlock Text="Выберите фигуру:" FontWeight="Bold" Foreground="White"/>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <RadioButton Content="Прямоугольник" IsChecked="{Binding IsRectangleSelected}" GroupName="ShapeType" Foreground="White"/>
+                    <RadioButton Content="Круг" IsChecked="{Binding !IsRectangleSelected}" GroupName="ShapeType" Foreground="White"/>
+                </StackPanel>
+
+                <Border BorderThickness="0,0,0,1" BorderBrush="Gray" Margin="0,10"/>
+                <TextBlock Text="Общие параметры" FontSize="16" FontWeight="Bold" Foreground="White"/>
+
+                <TextBlock Text="Цвет фигуры:" Foreground="LightGray"/>
+                <ColorPicker Color="{Binding CurrentShape.ShapeColor, Mode=TwoWay}" />
+
+                <TextBlock Text="Текст на фигуре:" Foreground="LightGray"/>
+                <TextBox Text="{Binding CurrentShape.DisplayText, Mode=TwoWay}" />
+                
+                <TextBlock Text="Цвет текста:" Foreground="LightGray"/>
+                <ColorPicker Color="{Binding CurrentShape.TextColor, Mode=TwoWay}"/>
+
+                <StackPanel Spacing="10" IsVisible="{Binding IsRectangleSelected}">
+                    <Border BorderThickness="0,0,0,1" BorderBrush="Gray" Margin="0,10"/>
+                    <TextBlock Text="Параметры прямоугольника" FontSize="16" FontWeight="Bold" Foreground="White"/>
+
+                    <TextBlock Text="{Binding #WidthSlider.Value, StringFormat='Ширина: {0:F0}'}" Foreground="LightGray"/>
+                    <Slider Name="WidthSlider" Minimum="10" Maximum="500" Value="{Binding RectangleState.Width, Mode=TwoWay}"/>
+
+                    <TextBlock Text="{Binding #HeightSlider.Value, StringFormat='Высота: {0:F0}'}" Foreground="LightGray"/>
+                    <Slider Name="HeightSlider" Minimum="10" Maximum="500" Value="{Binding RectangleState.Height, Mode=TwoWay}"/>
+
+                    <TextBlock Text="{Binding #RotationSlider.Value, StringFormat='Поворот: {0:F0}°'}" Foreground="LightGray"/>
+                    <Slider Name="RotationSlider" Minimum="0" Maximum="360" Value="{Binding RectangleState.Rotation, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <StackPanel Spacing="10" IsVisible="{Binding !IsRectangleSelected}">
+                    <Border BorderThickness="0,0,0,1" BorderBrush="Gray" Margin="0,10"/>
+                    <TextBlock Text="Параметры круга" FontSize="16" FontWeight="Bold" Foreground="White"/>
+
+                    <TextBlock Text="{Binding #DiameterSlider.Value, StringFormat='Диаметр: {0:F0}'}" Foreground="LightGray"/>
+                    <Slider Name="DiameterSlider" Minimum="10" Maximum="500" Value="{Binding CircleState.Diameter, Mode=TwoWay}"/>
+
+                    <TextBlock Text="{Binding #ScaleXSlider.Value, StringFormat='Сжатие по X: {0:F1}'}" Foreground="LightGray"/>
+                    <Slider Name="ScaleXSlider" Minimum="0.1" Maximum="3.0" Value="{Binding CircleState.ScaleX, Mode=TwoWay}"/>
+
+                    <TextBlock Text="{Binding #ScaleYSlider.Value, StringFormat='Сжатие по Y: {0:F1}'}" Foreground="LightGray"/>
+                    <Slider Name="ScaleYSlider" Minimum="0.1" Maximum="3.0" Value="{Binding CircleState.ScaleY, Mode=TwoWay}"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Background="#3D3D3D">
+            <Grid HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  IsVisible="{Binding IsRectangleSelected}"
+                  Width="{Binding RectangleState.Width}"
+                  Height="{Binding RectangleState.Height}">
+                
+                <Grid.RenderTransform>
+                    <RotateTransform Angle="{Binding RectangleState.Rotation}" CenterX="{Binding RectangleState.Width, Converter={StaticResource CenterConverter}}" CenterY="{Binding RectangleState.Height, Converter={StaticResource CenterConverter}}"/>
+                </Grid.RenderTransform>
+                
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{Binding RectangleState.ShapeColor}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <TextBlock Text="{Binding RectangleState.DisplayText}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="16">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{Binding RectangleState.TextColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Grid>
+
+            <Grid HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  IsVisible="{Binding !IsRectangleSelected}"
+                  Width="{Binding CircleState.Diameter}"
+                  Height="{Binding CircleState.Diameter}">
+
+                <Grid.RenderTransform>
+                    <ScaleTransform ScaleX="{Binding CircleState.ScaleX}" ScaleY="{Binding CircleState.ScaleY}"/>
+                </Grid.RenderTransform>
+                
+                <Ellipse>
+                    <Ellipse.Fill>
+                        <SolidColorBrush Color="{Binding CircleState.ShapeColor}"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock Text="{Binding CircleState.DisplayText}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="16">
+                    <TextBlock.Foreground>
+                        <SolidColorBrush Color="{Binding CircleState.TextColor}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>

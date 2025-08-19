@@ -51,6 +51,8 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public void UpdateShapeColor()
     {
+        if (CurrentShape == null) return;
+    
         if (byte.TryParse(ShapeColorR, out byte r) &&
             byte.TryParse(ShapeColorG, out byte g) &&
             byte.TryParse(ShapeColorB, out byte b))
@@ -61,6 +63,8 @@ public partial class MainWindowViewModel : ViewModelBase
     
     public void UpdateTextColor()
     {
+        if (CurrentShape == null) return;
+    
         if (byte.TryParse(TextColorR, out byte r) &&
             byte.TryParse(TextColorG, out byte g) &&
             byte.TryParse(TextColorB, out byte b))

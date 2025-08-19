@@ -33,7 +33,7 @@
 2. Клонируйте репозиторий:
 ```
 git clone https://github.com/TOTOMCG/Shape-Editor.git
-cd Task№1/ShapeEditor
+cd ShapeEditor/Task№1/ShapeEditor
 ```
 3. Запуск:
 ```

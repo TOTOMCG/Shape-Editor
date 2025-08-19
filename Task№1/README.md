@@ -32,6 +32,10 @@
   - любая IDE (Visual Studio 2022/Rider/VS Code)
 2. Клонируйте репозиторий:
 ```
-git clone https://github.com/your-repo/shape-editor.git
-cd shape-editor
+git clone https://github.com/TOTOMCG/Shape-Editor.git
+cd Task№1/ShapeEditor
+```
+3. Запуск:
+```
+dotnet run
 ```
